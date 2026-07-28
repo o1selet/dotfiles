@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Password managers can mark clipboard contents as sensitive. Do not persist
+# those entries; an unset state is the normal case for regular applications.
+if [ "${CLIPBOARD_STATE:-}" = "sensitive" ]; then
+    exit 0
+fi
+
+exec cliphist store

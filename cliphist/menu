@@ -1,0 +1,67 @@
+#!/bin/sh
+
+set -u
+
+config_dir=${XDG_CONFIG_HOME:-"$HOME/.config"}
+tofi_config="$config_dir/tofi/configA"
+
+notify() {
+    notify-send --app-name="Clipboard" "Clipboard" "$1"
+}
+
+restore_cliphist_row() {
+    # tofi renders a tab after cliphist's numeric ID very widely. The picker
+    # displays two spaces instead; restore the tab required by cliphist here.
+    awk '{
+        id = $1
+        sub(/^[^ ]+  /, "")
+        print id "\t" $0
+    }'
+}
+
+pick() {
+    prompt=$1
+    entries=$(
+        cliphist list 2>/dev/null |
+            awk -F '\t' '{
+                id = $1
+                sub(/^[^\t]*\t/, "")
+                print id "  " $0
+            }'
+    ) || entries=
+
+    if [ -z "$entries" ]; then
+        notify "History is empty"
+        return 1
+    fi
+
+    printf '%s\n' "$entries" |
+        tofi --config "$tofi_config" \
+            --prompt-text "$prompt" \
+            --placeholder-text "type to search…" \
+            --fuzzy-match=true
+}
+
+case "${1:-select}" in
+    select)
+        selection=$(pick " : ") || exit 0
+        [ -n "$selection" ] || exit 0
+        printf '%s\n' "$selection" |
+            restore_cliphist_row |
+            cliphist decode |
+            wl-copy
+        notify "Selected item copied"
+        ;;
+    delete)
+        selection=$(pick "󰆴 : ") || exit 0
+        [ -n "$selection" ] || exit 0
+        printf '%s\n' "$selection" |
+            restore_cliphist_row |
+            cliphist delete
+        notify "Item deleted"
+        ;;
+    *)
+        printf 'Usage: %s [select|delete]\n' "$0" >&2
+        exit 2
+        ;;
+esac
