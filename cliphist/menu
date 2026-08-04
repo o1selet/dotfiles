@@ -26,7 +26,19 @@ pick() {
             awk -F '\t' '{
                 id = $1
                 sub(/^[^\t]*\t/, "")
-                print id "  " $0
+
+                if ($0 ~ /^\[\[ binary data /) {
+                    split($0, image, " ")
+                    dimensions = image[7]
+                    gsub(/x/, "×", dimensions)
+                    format = toupper(image[6])
+
+                    print id "  󰋩  Image " dimensions \
+                        " · " format \
+                        " · " image[4] " " image[5]
+                } else {
+                    print id "  " $0
+                }
             }'
     ) || entries=
 

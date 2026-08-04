@@ -32,3 +32,13 @@ hl.window_rule({
     move = "20 monitor_h-120",
     float = true,
 })
+
+hl.window_rule({
+    name = "gtk-file-picker",
+    match = {
+        class = "^xdg-desktop-portal-gtk$",
+    },
+    float = true,
+    size = { 955, 535 },
+    center = true,
+})
