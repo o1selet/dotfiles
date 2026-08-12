@@ -1,3 +1,6 @@
 # This file contains fish universal variable definitions.
 # VERSION: 3.0
+SETUVAR --export EDITOR:vim
+SETUVAR --export SUDO_EDITOR:vim
+SETUVAR --export VISUAL:vim
 SETUVAR fish_greeting:\x1d

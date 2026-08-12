@@ -42,3 +42,12 @@ hl.window_rule({
     size = { 955, 535 },
     center = true,
 })
+
+hl.window_rule({
+    name = "waypaper-overlay",
+    match = {
+        class = "^waypaper$",
+    },
+    float = true,
+    center = true,
+})
