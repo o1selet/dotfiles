@@ -51,3 +51,21 @@ hl.window_rule({
     float = true,
     center = true,
 })
+
+hl.window_rule({
+    name = "flclashx",
+    match = {
+        class = "^Com\\.follow\\.clashx$",
+    },
+    float = true,
+    size = { 588, 868 },
+    center = true,
+})
+
+hl.window_rule({
+    name = "social-apps",
+    match = {
+        class = "^(discord|org\\.telegram\\.desktop)$",
+    },
+    workspace = "special:social silent",
+})
